@@ -1,0 +1,26 @@
+{
+  "name": "session-memcached",
+  "version": "0.1.0",
+  "description": " Save persistent sessions in memcached for nodejs ",
+  "main": "lib/session.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CliffS/session-memcached.git"
+  },
+  "keywords": [
+    "session",
+    "memcached"
+  ],
+  "author": "Cliff Stanford",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CliffS/session-memcached/issues"
+  },
+  "homepage": "https://github.com/CliffS/session-memcached",
+  "dependencies": {
+    "cookie": "^0.1.2"
+  }
+}
