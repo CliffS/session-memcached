@@ -19,10 +19,15 @@ class Session
     @uuid = cookie.value
     memcached = new Memcached SERVER unless memcached?
     get = Deasync memcached.get.bind memcached
-    end = res.end.bind res
-    res.end = (data, encoding, callback) =>
-      end data, encoding, callback
+    end = res.end
+    ended = false
+    # Copied from https://github.com/quorrajs/NodeSession/blob/master/index.js
+    res.end = =>
+      endArguments = arguments
+      return false if ended
+      ended = true
       @save()
+      end.apply res, endArguments
     session = get(@uuid) ? {}
     @[k] = v for k, v of session
 
