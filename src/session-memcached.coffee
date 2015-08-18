@@ -1,8 +1,7 @@
-
 Cookies = require './cookie/Cookies'
 Memcached = require 'memcached'
 UUId = require 'uuid'
-Dasync = require 'dasync'
+Deasync = require 'deasync'
 
 COOKIENAME = 'SESSMEMID'
 SERVER     = 'localhost:11211'
@@ -15,34 +14,28 @@ class Session
   constructor: (req, res) ->
     cookies = new Cookies req, res
     cookie = cookies[COOKIENAME] ? cookies.add COOKIENAME, UUId.v4(),
-      Path: '/'
+      path: '/'
     cookie.set()
-    @id = cookie.value
+    @uuid = cookie.value
     memcached = new Memcached SERVER unless memcached?
-    get = Deasync memcached.get
-    @session = get(@id) ? {}
+    get = Deasync memcached.get.bind memcached
+    end = res.end.bind res
+    res.end = (data, encoding, callback) =>
+      end data, encoding, callback
+      @save()
+    session = get(@uuid) ? {}
+    @[k] = v for k, v of session
 
-  get: (name) ->
-    @session[name]
-
-  set: (name, value) ->
-    @session[name] = value
-    memcached.set @id, @session, LIFETIME, (err) ->
+  save: ->
+    session = {}
+    session[k] = v for own k,v of @ when k isnt 'uuid'
+    memcached.set @uuid, session, LIFETIME, (err) ->
       throw err if err
 
-  clear: (name) ->
-    names = switch
-      when typeof name is 'string' then [ name ]
-      when name instanceof Array then name
-    if names
-      delete @session[n] for n in names
-    else
-      @session = {}
-    memcached.set @id, @session, LIFETIME, (err) ->
+  clear:  ->
+    delete @[k] for own k of @ when k isnt 'uuid'
+    memcached.del @uuid, (err) ->
       throw err if err
-
-  dump: ->
-    return JSON.stringify @session, null, 2
 
   @setCookieName: (name) ->
     COOKIENAME = name
@@ -53,3 +46,6 @@ class Session
 
   @setDuration: (seconds) ->
     LIFETIME = seconds
+
+
+module.exports = Session

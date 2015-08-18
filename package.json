@@ -1,10 +1,11 @@
 {
   "name": "session-memcached",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": " Save persistent sessions in memcached for nodejs ",
   "main": "lib/session-memcached.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "coffee -c -o lib src"
   },
   "repository": {
     "type": "git",

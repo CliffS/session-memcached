@@ -6,7 +6,7 @@ class Cookie
     @setOption opt, val for opt, val of options
 
   set: ->
-    cookie = "#{name}=#{value}"
+    cookie = "#{@name}=#{@value}"
     if @expiry
       @expiry = new Date @expiry unless @expiry instanceof Date
       cookie += "; expires=#{@expiry.toUTCString()}"
@@ -19,12 +19,11 @@ class Cookie
       cookies = [ cookies ] if typeof cookies is 'string'
       cookies.push cookie
     else cookies = cookie
-    res.setHeader 'Set-Cookie', cookies
-    @
+    @res.setHeader 'Set-Cookie', cookies
 
   setOption: (opt, value) ->
     throw "Unknown option: #{opt}" unless opt in @possible_options
-    @[opt] = val
+    @[opt] = value
 
   possible_options: [
     'expiry'
