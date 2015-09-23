@@ -1,7 +1,7 @@
 Cookies = require './cookie/Cookies'
 Memcached = require 'memcached'
 UUId = require 'uuid'
-Deasync = require 'deasync'
+EventEmitter = require 'events'
 
 COOKIENAME = 'SESSMEMID'
 SERVER     = 'localhost:11211'
@@ -9,16 +9,16 @@ LIFETIME   = 6 * 60 * 60    # 6 hours
 
 memcached = undefined
 
-class Session
+class Session extends EventEmitter
 
   constructor: (req, res) ->
+    console.log 'HERE'
     cookies = new Cookies req, res
     cookie = cookies[COOKIENAME] ? cookies.add COOKIENAME, UUId.v4(),
       path: '/'
     cookie.set()
     @uuid = cookie.value
     memcached = new Memcached SERVER unless memcached?
-    get = Deasync memcached.get.bind memcached
     end = res.end
     ended = false
     # Copied from https://github.com/quorrajs/NodeSession/blob/master/index.js
@@ -28,19 +28,21 @@ class Session
       ended = true
       @save()
       end.apply res, endArguments
-    session = get(@uuid) ? {}
-    @[k] = v for k, v of session
+    memcached.get @uuid, (err, session) =>
+      return @emit 'error', err if err
+      @session = session ? {}
+      @emit 'ready', @session
 
   save: ->
-    session = {}
-    session[k] = v for own k,v of @ when k isnt 'uuid'
-    memcached.set @uuid, session, LIFETIME, (err) ->
-      throw err if err
+    memcached.set @uuid, @session, LIFETIME, (err) =>
+      return @emit 'error', err if err
+      @emit 'saved', @session
 
   clear:  ->
-    delete @[k] for own k of @ when k isnt 'uuid'
-    memcached.del @uuid, (err) ->
-      throw err if err
+    memcached.del @uuid, (err) =>
+      return @emit 'error', err if err
+      delete @session
+      @emit 'deleted'
 
   @setCookieName: (name) ->
     COOKIENAME = name
