@@ -12,7 +12,6 @@ memcached = undefined
 class Session extends EventEmitter
 
   constructor: (req, res) ->
-    console.log 'HERE'
     cookies = new Cookies req, res
     cookie = cookies[COOKIENAME] ? cookies.add COOKIENAME, UUId.v4(),
       path: '/'
