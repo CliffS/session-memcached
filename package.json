@@ -17,9 +17,9 @@
     "memcached"
   ],
   "author": {
-      "name": "Cliff Stanford",
-      "email": "cliff@may.be",
-      "url": "http://may.be/"
+    "name": "Cliff Stanford",
+    "email": "cliff@may.be",
+    "url": "http://may.be/"
   },
   "license": "ISC",
   "bugs": {
@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/CliffS/session-memcached",
   "dependencies": {
-    "deasync": "^0.1.0",
     "memcached": "^2.1.0",
     "uuid": "^2.0.1"
   }
