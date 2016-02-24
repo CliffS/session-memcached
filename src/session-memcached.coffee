@@ -25,7 +25,7 @@ class Session extends EventEmitter
       endArguments = arguments
       return false if ended
       ended = true
-      @save()
+      @save() unless res.statusCode >= 400
       end.apply res, endArguments
     memcached.get @uuid, (err, session) =>
       return @emit 'error', err if err
