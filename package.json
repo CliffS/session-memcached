@@ -21,7 +21,7 @@
     "email": "cliff@may.be",
     "url": "http://may.be/"
   },
-  "license": "ISC",
+  "license": "UNLICENSE",
   "bugs": {
     "url": "https://github.com/CliffS/session-memcached/issues"
   },
