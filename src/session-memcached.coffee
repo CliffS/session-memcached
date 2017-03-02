@@ -30,7 +30,7 @@ class Session extends EventEmitter
       @save() unless res.statusCode >= 400
       end.apply res, endArguments
     if TESTMODE
-      setImmediate ->
+      setImmediate =>
         @emit 'ready', @session
     else
       memcached.get @uuid, (err, session) =>
@@ -40,7 +40,7 @@ class Session extends EventEmitter
 
   save: ->
     if TESTMODE
-      setImmediate ->
+      setImmediate =>
         @emit 'saved', @session
     else 
       memcached.set @uuid, @session, LIFETIME, (err) =>
@@ -49,7 +49,7 @@ class Session extends EventEmitter
 
   clear:  ->
     if TESTMODE
-      setImmediate ->
+      setImmediate =>
         delete @session
         @emit 'deleted'
     else
