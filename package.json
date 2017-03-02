@@ -1,6 +1,6 @@
 {
   "name": "session-memcached",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": " Save persistent sessions in memcached for nodejs ",
   "main": "lib/session-memcached.js",
   "scripts": {
