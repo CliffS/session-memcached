@@ -13,6 +13,7 @@ TESTMODE  = false
 class Session extends EventEmitter
 
   constructor: (req, res) ->
+    super()
     cookies = new Cookies req, res
     cookie = cookies[COOKIENAME] ? cookies.add COOKIENAME, UUId.v4(),
       path: '/'
